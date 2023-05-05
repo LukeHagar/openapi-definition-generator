@@ -14,7 +14,7 @@
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<strong class="text-xl">Swagger Definition Objects Generator</strong>
+				<strong class="text-xl">Swagger Definition Generator</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<a
