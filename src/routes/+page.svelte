@@ -275,9 +275,8 @@
 </svelte:head>
 
 <p class="text-center p-8 relative">
-	Add your JSON mock to generate Swagger definitions.
 	{#if parseErr && inputJSON != ''}
-		<aside class="alert variant-filled-warning absolute m-4 center inset-0">
+		<aside class="alert variant-filled-warning absolute m-4 p-4 center inset-0">
 			<h3>Error in JSON</h3>
 			<p>{parseErr}</p>
 		</aside>
@@ -286,6 +285,9 @@
 <div class="flex flex-row justify-end p-2 gap-2" />
 <div class="flex flex-row justify-between p-2 gap-2">
 	<div class="grow">
+		<p class="text-center py-2">
+			Input all of your JSON formatted Data, Typically API response bodies
+		</p>
 		<textarea
 			id="JSON"
 			rows="35"
@@ -299,6 +301,9 @@
 		/>
 	</div>
 	<div class="grow relative">
+		<p class="text-center py-2">
+			And here is that JSON Response formatted as a YAML OpenAPI Specification
+		</p>
 		<textarea
 			readonly
 			id="Swagger"
