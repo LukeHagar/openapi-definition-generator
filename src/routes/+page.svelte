@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { RadioGroup, RadioItem, clipboard } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 
 	//@ts-ignore
@@ -7,9 +8,9 @@
 	let inputJSON = '';
 	let outSwagger = '';
 
-	let requestExamples: boolean;
+	let requestExamples: boolean = true;
 	let noInt: boolean;
-	let yamlOut: boolean;
+	let yamlOut: boolean = true;
 	let tabCount: number;
 	let indentator: string;
 	let nullType: string;
@@ -282,32 +283,39 @@
 		</aside>
 	{/if}
 </p>
+<div class="flex flex-row justify-end p-2 gap-2" />
 <div class="flex flex-row justify-between p-2 gap-2">
-	<textarea
-		id="JSON"
-		rows="35"
-		cols="85"
-		class="grow textarea"
-		placeholder="Type your JSON"
-		contenteditable
-		on:input={trigger}
-		on:paste
-		bind:value={inputJSON}
-	/>
-
-	<textarea
-		readonly
-		id="Swagger"
-		rows="35"
-		cols="85"
-		class="grow textarea"
-		placeholder="Here is your Swagger"
-		bind:value={outSwagger}
-	/>
+	<div class="grow">
+		<textarea
+			id="JSON"
+			rows="35"
+			cols="85"
+			class="textarea"
+			placeholder="Type your JSON"
+			contenteditable
+			on:input={trigger}
+			on:paste
+			bind:value={inputJSON}
+		/>
+	</div>
+	<div class="grow relative">
+		<textarea
+			readonly
+			id="Swagger"
+			rows="35"
+			cols="85"
+			class="textarea"
+			placeholder="Here is your Swagger"
+			bind:value={outSwagger}
+		/>
+		<button class="btn variant-filled-primary absolute top-4 right-4" use:clipboard={outSwagger}>
+			Copy
+		</button>
+	</div>
 </div>
-<div class="flex flex-row justify-center px-4 gap-24">
+<div class="flex flex-row justify-center px-4 gap-8">
 	<label class="label">
-		Convert null values to:
+		Convert null values to
 		<select bind:value={nullType} on:change={() => convert()} class="select" id="nullType">
 			<option value="string" selected>String</option>
 			<option value="number">Number</option>
@@ -315,9 +323,18 @@
 			<option value="boolean">Boolean</option>
 		</select>
 	</label>
-	<div>
-		<label>
-			Add values as examples:
+	<div class="flex flex-col justify-center">
+		<RadioGroup>
+			<RadioItem bind:group={yamlOut} on:change={() => convert()} name="justify" value={true}>
+				YAML
+			</RadioItem>
+			<RadioItem bind:group={yamlOut} on:change={() => convert()} name="justify" value={false}>
+				JSON
+			</RadioItem>
+		</RadioGroup>
+	</div>
+	<div class="flex flex-col justify-center">
+		<label class="flex items-center space-x-2">
 			<input
 				bind:checked={requestExamples}
 				on:change={() => convert()}
@@ -325,9 +342,9 @@
 				type="checkbox"
 				id="requestExamples"
 			/>
+			<p>Add values as examples</p>
 		</label>
-		<label>
-			Convert integer values to number:
+		<label class="flex items-center space-x-2">
 			<input
 				bind:checked={noInt}
 				on:change={() => convert()}
@@ -335,22 +352,13 @@
 				type="checkbox"
 				id="noInt"
 			/>
-		</label>
-		<label>
-			Output as YAML:
-			<input
-				bind:checked={yamlOut}
-				on:change={() => convert()}
-				class="checkbox"
-				type="checkbox"
-				id="yamlOut"
-			/>
+			<p>Convert integer values to number</p>
 		</label>
 	</div>
 </div>
 <p class="text-center pt-4">
 	Feel like collaborating? Clone the repository at <a
 		target="_blank"
-		href="https://github.com/Roger13/SwaggerGenerator">GitHub</a
+		href="https://github.com/LukeHagar/openapi-definition-generator">GitHub</a
 	>
 </p>
