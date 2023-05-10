@@ -283,7 +283,7 @@
 	{/if}
 </p>
 <div class="flex flex-row justify-end p-2 gap-2" />
-<div class="flex flex-row justify-between p-2 gap-2">
+<div class="flex flex-row flex-wrap justify-between p-2 gap-2">
 	<div class="grow">
 		<p class="text-center py-2">
 			Input all of your JSON formatted Data, Typically API response bodies
@@ -300,25 +300,27 @@
 			bind:value={inputJSON}
 		/>
 	</div>
-	<div class="grow relative">
+	<div class="grow">
 		<p class="text-center py-2">
 			And here is that JSON Response formatted as a YAML OpenAPI Specification
 		</p>
-		<textarea
-			readonly
-			id="Swagger"
-			rows="35"
-			cols="85"
-			class="textarea"
-			placeholder="Here is your Swagger"
-			bind:value={outSwagger}
-		/>
-		<button class="btn variant-filled-primary absolute top-4 right-4" use:clipboard={outSwagger}>
-			Copy
-		</button>
+		<div class="relative">
+			<textarea
+				readonly
+				id="Swagger"
+				rows="35"
+				cols="85"
+				class="textarea"
+				placeholder="Here is your Swagger"
+				bind:value={outSwagger}
+			/>
+			<button class="btn variant-filled-primary absolute top-4 right-4" use:clipboard={outSwagger}>
+				Copy
+			</button>
+		</div>
 	</div>
 </div>
-<div class="flex flex-row justify-center px-4 gap-8">
+<div class="flex flex-row flex-wrap justify-center px-4 gap-8">
 	<label class="label">
 		Convert null values to
 		<select bind:value={nullType} on:change={() => convert()} class="select" id="nullType">
