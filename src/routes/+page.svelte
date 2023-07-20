@@ -1,25 +1,42 @@
 <script lang="ts">
 	import { RadioGroup, RadioItem, clipboard } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-
-	//@ts-ignore
 	import { stringify } from 'yaml';
+
+	let sampleInput = `{
+	"numbersMock": {
+		"smallInt": -20,
+		"bigInt": 2147483647,
+		"unsafeInt": 9999999999999999,
+		"notInt": 12.2
+	},
+	"stringsMock": {
+		"stringTest": "Hello World",
+		"isoDate": "1999-12-31",
+		"isoDateTime": "1999-12-31T23:59:59Z"
+	},
+	"objectsMock": {
+		"child": {"child": true},
+		"childList": [{"child": true}],
+		"childMatrix": [[{"child": true}]],
+		"nullable": null
+	}
+}`
 	let inJSON: any;
 	let inputJSON = '';
 	let outSwagger = '';
-
-	let requestExamples: boolean = true;
-	let noInt: boolean;
-	let yamlOut: boolean = true;
+	let parseErr: Error | null;
+	let timeOut: any;
 	let tabCount: number;
 	let indentator: string;
 	let nullType: string;
-	let parseErr: Error | null;
-	let timeOut: any;
+	let noInt: boolean;
+	let requestExamples: boolean = true;
+	let yamlOut: boolean = true;
 
 	const trigger = (evt: Event) => {
 		clearTimeout(timeOut);
-		timeOut = setTimeout(() => convert(), 100);
+		timeOut = setTimeout(() => convert(), 200);
 	};
 
 	const convert = () => {
@@ -31,6 +48,9 @@
 			parseErr = e;
 			return;
 		}
+
+		inputJSON = JSON.stringify(JSON.parse(inputJSON), null, '\t')
+		
 		//For recursive functions to keep track of the tab spacing
 		tabCount = 0;
 		indentator = '\n';
@@ -128,7 +148,7 @@
 		}
 		if (requestExamples) {
 			//Log example if checkbox is checked
-			outSwagger += ',' + indentator + '"example": "' + num + '"';
+			outSwagger += ',' + indentator + '"example": ' + num ;
 		}
 	}
 
@@ -225,12 +245,7 @@
 	}
 
 	function format(value: string) {
-		/*
-      Convert JSON to YAML if yaml checkbox is checked
-      Global variables updated:
-      NONE
-      */
-
+    //	Convert JSON to YAML if yaml option is selected
 		value = JSON.stringify(JSON.parse(value), null, '\t');
 
 		if (yamlOut) {
@@ -245,25 +260,7 @@
 		if (tempJSON !== null && tempJSON !== '') {
 			inputJSON = tempJSON;
 		} else {
-			inputJSON = `{
-	"numbersMock": {
-		"smallInt": -20,
-		"bigInt": 2147483647,
-		"unsafeInt": 9999999999999999,
-		"notInt": 12.2
-	},
-	"stringsMock": {
-		"stringTest": "Hello World",
-		"isoDate": "1999-12-31",
-		"isoDateTime": "1999-12-31T23:59:59Z"
-	},
-	"objectsMock": {
-		"child": {"child": true},
-		"childList": [{"child": true}],
-		"childMatrix": [[{"child": true}]],
-		"nullable": null
-	}
-}`;
+			inputJSON = sampleInput;
 		}
 		convert();
 	});
@@ -302,7 +299,7 @@
 	</div>
 	<div class="grow">
 		<p class="text-center py-2">
-			And here is that JSON Response formatted as a YAML OpenAPI Specification
+			And here is that JSON Response formatted as a {yamlOut === true ? "YAML" : "JSON"} OpenAPI Specification
 		</p>
 		<div class="relative">
 			<textarea
