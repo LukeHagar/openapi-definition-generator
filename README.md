@@ -1,4 +1,4 @@
-# openapi-definition-generator
- JSON to OpenAPI Definition generator
+# OpenAPI Definition Generator
+Convert your JSON formatted responses from API calls into OpenAPI Definitions at the click of a button
 
- https://openapi-definition-generator.vercel.app/
+https://oas-def-gen.lukehagar.com
