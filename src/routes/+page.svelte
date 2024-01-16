@@ -36,6 +36,41 @@
 <svelte:head>
 	<meta charset="UTF-8" />
 	<title>OpenAPI Definition Generator</title>
+	<!-- HTML Meta Tags -->
+
+	<meta
+		name="description"
+		content="Convert your JSON formatted responses from API calls into OpenAPI Definitions at the click of a button"
+	/>
+
+	<!-- Facebook Meta Tags -->
+	<meta property="og:url" content="https://openapi-definition-generator.vercel.app" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="OpenAPI Definition Generator" />
+	<meta
+		property="og:description"
+		content="Convert your JSON formatted responses from API calls into OpenAPI Definitions at the click of a button"
+	/>
+	<meta
+		property="og:image"
+		content="https://opengraph.b-cdn.net/production/documents/f5773de6-c2f8-4648-9ee4-04c4281397da.jpg?token=LwnXmXIbjqROq3UJT3v7pOSz6nZsh7RoT6UumBC-58c&height=630&width=1200&expires=33241429487"
+	/>
+
+	<!-- Twitter Meta Tags -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta property="twitter:domain" content="openapi-definition-generator.vercel.app" />
+	<meta property="twitter:url" content="https://openapi-definition-generator.vercel.app" />
+	<meta name="twitter:title" content="OpenAPI Definition Generator" />
+	<meta
+		name="twitter:description"
+		content="Convert your JSON formatted responses from API calls into OpenAPI Definitions at the click of a button"
+	/>
+	<meta
+		name="twitter:image"
+		content="https://opengraph.b-cdn.net/production/documents/f5773de6-c2f8-4648-9ee4-04c4281397da.jpg?token=LwnXmXIbjqROq3UJT3v7pOSz6nZsh7RoT6UumBC-58c&height=630&width=1200&expires=33241429487"
+	/>
+
+	<!-- Meta Tags Generated via https://www.opengraph.xyz -->
 </svelte:head>
 
 <!-- <p class="text-center relative">
