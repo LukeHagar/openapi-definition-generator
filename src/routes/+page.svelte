@@ -1,15 +1,16 @@
 <script lang="ts">
-	import { example, convertObjectToOAS } from '$lib/converter';
+	import { example, convertObjectToOAS, type Config } from '$lib/converter';
 	import { clipboard } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { stringify } from 'yaml';
 	import { JSONEditor } from 'svelte-jsoneditor';
 	import { config, yamlOut } from '$lib/store';
 
-	let content: { text?: string | undefined; json: object } = {
+	let content: { text?: string; json?: object } = {
 		text: undefined, // can be used to pass a stringified JSON document instead
 		json: example
 	};
+	let outSwagger: string = '';
 
 	onMount(() => {
 		let tempJSON = localStorage.getItem('inputJSON');
@@ -28,7 +29,23 @@
 		}
 	}
 
-	$: outSwagger = format(convertObjectToOAS(content.json, $config), $yamlOut);
+	function run(
+		content: { text?: string; json?: object | undefined },
+		config: Config,
+		yamlOut: boolean
+	) {
+		if (content.json !== undefined && content.text !== undefined) return;
+		let data;
+		if (content.text !== undefined) {
+			data = JSON.parse(content.text);
+		} else if (content.json !== undefined) {
+			data = content.json;
+		}
+
+		outSwagger = format(convertObjectToOAS(data, config), yamlOut);
+	}
+
+	$: run(content, $config, $yamlOut);
 </script>
 
 <div class="flex flex-row flex-wrap justify-between px-2 gap-2 overflow-hidden">
@@ -37,7 +54,7 @@
 			Input all of your JSON formatted Data, Typically API response bodies
 		</p>
 		<div class="card my-json-editor jse-theme-dark overflow-hidden h-[85vh]">
-			<JSONEditor bind:content />
+			<JSONEditor onChange={() => run(content, $config, $yamlOut)} bind:content />
 		</div>
 	</div>
 	<div class="grow">

@@ -77,12 +77,14 @@ export function convertNumber(number: number, config: Config) {
 export function convertArray(array: any[], config: Config) {
 	const output: Output = {};
 	const items = [];
+	const exampleArray = [];
 
 	for (const entry of array) {
 		const map = convertObject(entry, config);
 
 		if (items.filter((item) => item.type === map.type && item.format === map.format).length < 1) {
 			items.push(map);
+			exampleArray.push(entry);
 		}
 	}
 
@@ -93,7 +95,7 @@ export function convertArray(array: any[], config: Config) {
 		output.items = [...items];
 	}
 
-	if (config.includeExamples) output.example = array;
+	if (config.includeExamples) output.example = exampleArray;
 
 	return output;
 }
@@ -140,6 +142,8 @@ export function convertObject(input: any, config: Config) {
 		output.type = 'boolean';
 		output.example = input;
 		return output;
+	} else if (input === undefined) {
+		throw new Error(`undefined cannot be converted to OAS`);
 	} else {
 		throw new Error(`Invalid Swagger type for type ${typeof input}:${input}`);
 	}
