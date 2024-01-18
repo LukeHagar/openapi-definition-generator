@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { example, convertObjectToOAS } from '$lib/converter';
-	import { RadioGroup, RadioItem, clipboard } from '@skeletonlabs/skeleton';
+	import { clipboard } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { stringify } from 'yaml';
 	import { JSONEditor } from 'svelte-jsoneditor';
 	import { config, yamlOut } from '$lib/store';
-
-	let parseErr: Error | null | undefined;
 
 	let content: { text?: string | undefined; json: object } = {
 		text: undefined, // can be used to pass a stringified JSON document instead
@@ -32,15 +30,6 @@
 
 	$: outSwagger = format(convertObjectToOAS(content.json, $config), $yamlOut);
 </script>
-
-<!-- <p class="text-center relative">
-	{#if parseErr}
-		<aside class="p-8 alert variant-filled-warning absolute m-4 center inset-0">
-			<h3>Error in JSON</h3>
-			<p>{parseErr}</p>
-		</aside>
-	{/if}
-</p> -->
 
 <div class="flex flex-row flex-wrap justify-between px-2 gap-2 overflow-hidden">
 	<div class="grow">

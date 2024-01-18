@@ -39,7 +39,7 @@ export type Config = {
 	/**
 	 * @description The type to use for null values
 	 */
-	nullType: 'number' | 'string' | 'integer' | 'boolean' | 'object';
+	nullType: 'number' | 'string' | 'integer' | 'boolean';
 };
 
 export type Output = {
@@ -118,7 +118,6 @@ export function convertObject(input: any, config: Config) {
 	if (input === null) {
 		const output: Output = {};
 		output.type = config.nullType;
-		if (config.nullType === 'object') output.additionalProperties = true;
 		output.format = 'nullable';
 		return output;
 	} else if (typeof input === 'number') {

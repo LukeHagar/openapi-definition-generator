@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { config, yamlOut } from '$lib/store';
-	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
-	// import '@skeletonlabs/skeleton/styles/all.css';
-	// Most of your app wide CSS should be put in this file
+	import { AppBar, AppShell, RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 	import '../app.postcss';
-	import { AppShell, AppBar, RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 </script>
 
 <!-- App Shell -->
@@ -24,17 +21,16 @@
 						<option value="number">Number</option>
 						<option value="integer">Integer</option>
 						<option value="boolean">Boolean</option>
-						<option value="object">Object</option>
 					</select>
 				</label>
 				<div class="flex flex-col justify-center text-sm">
 					<RadioGroup>
-						<RadioItem padding="px-2" bind:group={$yamlOut} name="justify" value={true}
-							>YAML</RadioItem
-						>
-						<RadioItem padding="px-2" bind:group={$yamlOut} name="justify" value={false}
-							>JSON</RadioItem
-						>
+						<RadioItem padding="px-2" bind:group={$yamlOut} name="justify" value={true}>
+							YAML
+						</RadioItem>
+						<RadioItem padding="px-2" bind:group={$yamlOut} name="justify" value={false}>
+							JSON
+						</RadioItem>
 					</RadioGroup>
 				</div>
 				<div class="flex flex-col justify-center gap-2">
