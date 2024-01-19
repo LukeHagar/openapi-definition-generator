@@ -33,7 +33,8 @@
 						</RadioItem>
 					</RadioGroup>
 				</div>
-				<div class="flex flex-col justify-center gap-2">
+
+				<div class="flex flex-row justify-center gap-6">
 					<label class="flex items-center space-x-2 text-sm">
 						<input
 							bind:checked={$config.includeExamples}
@@ -65,22 +66,24 @@
 			</div>
 
 			<svelte:fragment slot="trail">
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://swagger.io/docs/specification/data-models/data-types/"
-					target="_blank"
-					rel="noreferrer"
-				>
-					OpenAPI Specification reference
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://github.com/LukeHagar/openapi-definition-generator/edit/main/src/routes/%2Bpage.svelte"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Fork this project
-				</a>
+				<div class="flex flex-row flex-wrap justify-between gap-4">
+					<a
+						class="btn btn-sm variant-ghost-surface"
+						href="https://swagger.io/docs/specification/data-models/data-types/"
+						target="_blank"
+						rel="noreferrer"
+					>
+						OpenAPI Specification reference
+					</a>
+					<a
+						class="btn btn-sm variant-ghost-surface"
+						href="https://github.com/LukeHagar/openapi-definition-generator/edit/main/src/routes/%2Bpage.svelte"
+						target="_blank"
+						rel="noreferrer"
+					>
+						Fork this project
+					</a>
+				</div>
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
