@@ -47,6 +47,11 @@ export type Config = {
 	 * @description The type to use for null values
 	 */
 	nullType: 'number' | 'string' | 'integer' | 'boolean';
+
+	/**
+	 * @description Whether to allow oneOf for array items schema
+	 */
+	allowOneOf: boolean;
 };
 
 export type StringType = {
@@ -125,28 +130,46 @@ export function convertArray(array: unknown[], config: Config) {
 	const output: ArrayType = { type: 'array' };
 	const items: Output[] = [];
 	const exampleArray = [];
-
+	let schema = {};
 	for (const entry of array) {
-		const map = convertObject(entry, config);
-
-		if (
-			!items.some(
-				(item) =>
-					(item.type === map.type && item.format === map.format && item.type !== 'object') ||
-					(item.type === 'object' &&
-						JSON.stringify(Object.keys(item.properties).sort()) ===
-							JSON.stringify(Object.keys(map.properties).sort()))
-			)
-		) {
-			items.push(map);
-			exampleArray.push(entry);
+		if (config.allowOneOf) {
+			const map = convertObject(entry, config);
+			if (
+				!items.some(
+					(item) =>
+						(item.type === map.type && item.format === map.format && item.type !== 'object') ||
+						(item.type === 'object' &&
+							JSON.stringify(Object.keys(item.properties).sort()) ===
+								JSON.stringify(Object.keys(map.properties).sort()))
+				)
+			) {
+				items.push(map);
+				exampleArray.push(entry);
+			}
+		} else {
+			items.push(entry);
+			if (typeof entry === 'object' && !Array.isArray(entry)) {
+				for (const prop in entry) {
+					schema[prop] = entry[prop];
+				}
+			}
 		}
 	}
 
-	if (items.length > 1) {
-		output.items = { oneOf: [...items] };
+	if (config.allowOneOf) {
+		if (items.length > 1) {
+			output.items = { oneOf: [...items] };
+		} else {
+			output.items = items[0];
+		}
 	} else {
-		output.items = items[0];
+		if (Object.keys(schema).length > 0) {
+			exampleArray.push(schema);
+			output.items = convertObject(schema, config);
+		} else {
+			exampleArray.push(items[0]);
+			output.items = convertObject(items[0], config);
+		}
 	}
 
 	if (config.includeExamples) output.example = exampleArray;

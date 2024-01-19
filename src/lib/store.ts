@@ -5,7 +5,8 @@ import { localStorageStore } from '@skeletonlabs/skeleton';
 const localConfig: Config = {
 	allowIntegers: true,
 	includeExamples: true,
-	nullType: 'string'
+	nullType: 'string',
+	allowOneOf: false
 };
 
 export const config: Writable<Config> = localStorageStore('config', localConfig);

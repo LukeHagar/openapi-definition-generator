@@ -52,6 +52,15 @@
 						/>
 						<p>Allow integer types</p>
 					</label>
+					<label class="flex items-center space-x-2 text-sm">
+						<input
+							bind:checked={$config.allowOneOf}
+							class="checkbox"
+							type="checkbox"
+							id="allowOneOf"
+						/>
+						<p>Allow array oneOf</p>
+					</label>
 				</div>
 			</div>
 

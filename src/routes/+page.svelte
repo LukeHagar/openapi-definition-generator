@@ -48,8 +48,8 @@
 	$: run(content, $config, $yamlOut);
 </script>
 
-<div class="flex flex-row flex-wrap justify-between px-2 gap-2 overflow-hidden">
-	<div class="grow">
+<div class="flex flex-row justify-between px-2 gap-2 overflow-hidden">
+	<div class="grow max-w-[50%]">
 		<p class="text-center py-2">
 			Input all of your JSON formatted Data, Typically API response bodies
 		</p>
@@ -57,7 +57,7 @@
 			<JSONEditor onChange={() => run(content, $config, $yamlOut)} bind:content />
 		</div>
 	</div>
-	<div class="grow">
+	<div class="grow max-w-[50%]">
 		<p class="text-center py-2">
 			And here is that JSON Response formatted as a {$yamlOut === true ? 'YAML' : 'JSON'} OpenAPI Specification
 		</p>
