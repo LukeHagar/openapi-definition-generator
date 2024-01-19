@@ -15,6 +15,13 @@ export const example = {
 		child: { child: true },
 		childList: [{ child: true }],
 		childMatrix: [[{ child: true }]],
+		mixedObjectsArray: [
+			[1, 2, { test: true }],
+			{ child: true },
+			{ son: true },
+			{ son: true },
+			{ offspring: true }
+		],
 		nullable: null
 	},
 	listMock: [1, 2, 3, 4, 5],
@@ -42,30 +49,70 @@ export type Config = {
 	nullType: 'number' | 'string' | 'integer' | 'boolean';
 };
 
-export type Output = {
-	type?: string;
+export type StringType = {
+	type: 'string';
 	format?: string;
-	items?: unknown[] | { oneOf: unknown[] };
-	properties?: object;
-	example?: unknown;
-	additionalProperties?: boolean;
+	example?: string;
 };
 
+export type NumberType = {
+	type: 'number';
+	format?: string;
+	example?: number;
+};
+
+export type ObjectType = {
+	type: 'object';
+	properties?: { [key: string]: Output };
+	additionalProperties?: boolean;
+	example?: object;
+};
+
+export type ArrayType = {
+	type: 'array';
+	items?: Output | { oneOf: Output[] };
+	example?: unknown[];
+};
+
+export type BooleanType = {
+	type: 'boolean';
+	format?: string;
+	example?: boolean;
+};
+
+export type IntegerType = {
+	type: 'integer';
+	format?: string;
+	example?: number;
+};
+
+export type NullableType = {
+	type: string;
+	format: 'nullable';
+};
+
+export type Output =
+	| StringType
+	| NumberType
+	| ObjectType
+	| ArrayType
+	| BooleanType
+	| IntegerType
+	| NullableType;
+
 export function convertNumber(number: number, config: Config) {
-	const output: Output = {};
+	let output: Output;
 	if (Number.isInteger(number) && config.allowIntegers) {
+		output = { type: 'integer' } as IntegerType;
 		if (number < 2147483647 && number > -2147483647) {
-			output.type = 'integer';
 			output.format = 'int32';
 		} else if (Number.isSafeInteger(number)) {
-			output.type = 'integer';
 			output.format = 'int64';
 		} else {
-			output.type = 'integer';
 			output.format = 'unsafe';
 		}
 	} else {
-		output.type = 'number';
+		output = { type: 'number' } as NumberType;
 	}
 	if (config.includeExamples) {
 		output.example = number;
@@ -74,25 +121,32 @@ export function convertNumber(number: number, config: Config) {
 	return output;
 }
 
-export function convertArray(array: any[], config: Config) {
-	const output: Output = {};
-	const items = [];
+export function convertArray(array: unknown[], config: Config) {
+	const output: ArrayType = { type: 'array' };
+	const items: Output[] = [];
 	const exampleArray = [];
 
 	for (const entry of array) {
 		const map = convertObject(entry, config);
 
-		if (items.filter((item) => item.type === map.type && item.format === map.format).length < 1) {
+		if (
+			!items.some(
+				(item) =>
+					(item.type === map.type && item.format === map.format && item.type !== 'object') ||
+					(item.type === 'object' &&
+						JSON.stringify(Object.keys(item.properties).sort()) ===
+							JSON.stringify(Object.keys(map.properties).sort()))
+			)
+		) {
 			items.push(map);
 			exampleArray.push(entry);
 		}
 	}
 
-	output.type = 'array';
 	if (items.length > 1) {
 		output.items = { oneOf: [...items] };
 	} else {
-		output.items = [...items];
+		output.items = items[0];
 	}
 
 	if (config.includeExamples) output.example = exampleArray;
@@ -101,7 +155,7 @@ export function convertArray(array: any[], config: Config) {
 }
 
 export function convertString(string: string, config: Config) {
-	const output: Output = { type: 'string' };
+	const output: StringType = { type: 'string' };
 	const regxDate = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 	const regxDateTime =
 		/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]).([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,3})?(Z|(\+|-)([0-1][0-9]|2[0-3]):[0-5][0-9])$/;
@@ -118,29 +172,24 @@ export function convertString(string: string, config: Config) {
 
 export function convertObject(input: any, config: Config) {
 	if (input === null) {
-		const output: Output = {};
-		output.type = config.nullType;
-		output.format = 'nullable';
-		return output;
+		return { type: config.nullType, format: 'nullable' } as NullableType;
 	} else if (typeof input === 'number') {
 		return convertNumber(input, config);
 	} else if (Array.isArray(input)) {
 		return convertArray(input, config);
 	} else if (typeof input === 'object') {
-		const output: Output = {};
+		const output: ObjectType = { type: 'object' };
 		const outputObj: any = {};
 		for (const prop in input) {
 			outputObj[prop] = convertObject(input[prop], config);
 		}
-		output.type = 'object';
 		output.properties = outputObj;
 		return output;
 	} else if (typeof input === 'string') {
 		return convertString(input, config);
 	} else if (typeof input === 'boolean') {
-		const output: Output = {};
-		output.type = 'boolean';
-		output.example = input;
+		const output: BooleanType = { type: 'boolean' };
+		if (config.includeExamples) output.example = input;
 		return output;
 	} else if (input === undefined) {
 		throw new Error(`undefined cannot be converted to OAS`);
