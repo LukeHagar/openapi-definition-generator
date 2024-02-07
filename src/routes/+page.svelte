@@ -45,8 +45,6 @@
 		description: string,
 		tags: string[]
 	) {
-		console.log(content, yamlOut);
-
 		let outJsonContent = {};
 
 		if (isTextContent(content) && content.text) {
