@@ -12,6 +12,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@floating-ui/dom": "^1.6.1",
 		"@skeletonlabs/skeleton": "^2.7.0",
 		"@skeletonlabs/tw-plugin": "^0.3.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -32,12 +33,17 @@
 		"prettier-plugin-svelte": "^3.1.2",
 		"svelte": "^4.2.8",
 		"svelte-check": "^3.6.3",
-		"svelte-jsoneditor": "^0.21.2",
+		"svelte-jsoneditor": "^0.21.5",
 		"tailwindcss": "^3.4.1",
 		"tslib": "^2.6.2",
 		"typescript": "^5.3.3",
 		"vite": "^5.0.0",
+		"vite-plugin-tailwind-purgecss": "^0.2.0",
 		"yaml": "^2.3.4"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@sentry/sveltekit": "^7.99.0",
+		"highlight.js": "^11.9.0"
+	}
 }
