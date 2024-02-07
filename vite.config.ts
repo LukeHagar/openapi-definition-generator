@@ -9,7 +9,8 @@ export default defineConfig({
 			sourceMapsUploadOptions: {
 				org: 'sentry',
 				project: 'oas-def-gen',
-				url: 'https://sentry.plygrnd.org/'
+				url: 'https://sentry.plygrnd.org/',
+				authToken: process.env.SENTRY_AUTH_TOKEN
 			}
 		}),
 		sveltekit(),
