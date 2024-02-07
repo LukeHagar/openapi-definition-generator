@@ -1,7 +1,24 @@
 <script lang="ts">
-	import { config, yamlOut } from '$lib/store';
-	import { AppBar, AppShell, RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
+	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
+	import { AppBar, AppShell, storeHighlightJs } from '@skeletonlabs/skeleton';
+
+	import { storePopup } from '@skeletonlabs/skeleton';
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
+
+	import 'highlight.js/styles/github-dark.css';
 	import '../app.postcss';
+
+	import hljs from 'highlight.js/lib/core';
+
+	// Import each language module you require
+	import json from 'highlight.js/lib/languages/json';
+	import yaml from 'highlight.js/lib/languages/yaml';
+
+	// Register each imported language module
+	hljs.registerLanguage('yaml', yaml);
+	hljs.registerLanguage('json', json);
+
+	storeHighlightJs.set(hljs);
 </script>
 
 <!-- App Shell -->
@@ -12,58 +29,6 @@
 			<svelte:fragment slot="lead">
 				<strong class="text-xl">OpenAPI Definition Generator</strong>
 			</svelte:fragment>
-
-			<div class="flex flex-row flex-wrap justify-center gap-8">
-				<label class="label text-sm">
-					Convert null values to
-					<select bind:value={$config.nullType} class="select" id="nullType">
-						<option value="string" selected>String</option>
-						<option value="number">Number</option>
-						<option value="integer">Integer</option>
-						<option value="boolean">Boolean</option>
-					</select>
-				</label>
-				<div class="flex flex-col justify-center text-sm">
-					<RadioGroup>
-						<RadioItem padding="px-2" bind:group={$yamlOut} name="justify" value={true}>
-							YAML
-						</RadioItem>
-						<RadioItem padding="px-2" bind:group={$yamlOut} name="justify" value={false}>
-							JSON
-						</RadioItem>
-					</RadioGroup>
-				</div>
-
-				<div class="flex flex-row justify-center gap-6">
-					<label class="flex items-center space-x-2 text-sm">
-						<input
-							bind:checked={$config.includeExamples}
-							class="checkbox"
-							type="checkbox"
-							id="requestExamples"
-						/>
-						<p>Add values as examples</p>
-					</label>
-					<label class="flex items-center space-x-2 text-sm">
-						<input
-							bind:checked={$config.allowIntegers}
-							class="checkbox"
-							type="checkbox"
-							id="allowInts"
-						/>
-						<p>Allow integer types</p>
-					</label>
-					<label class="flex items-center space-x-2 text-sm">
-						<input
-							bind:checked={$config.allowOneOf}
-							class="checkbox"
-							type="checkbox"
-							id="allowOneOf"
-						/>
-						<p>Allow array oneOf</p>
-					</label>
-				</div>
-			</div>
 
 			<svelte:fragment slot="trail">
 				<div class="flex flex-row flex-wrap justify-between gap-4">

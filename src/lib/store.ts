@@ -1,6 +1,5 @@
-import type { Writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 import type { Config } from './converter';
-import { localStorageStore } from '@skeletonlabs/skeleton';
 
 const localConfig: Config = {
 	allowIntegers: true,
@@ -9,5 +8,5 @@ const localConfig: Config = {
 	allowOneOf: false
 };
 
-export const config: Writable<Config> = localStorageStore('config', localConfig);
-export const yamlOut: Writable<boolean> = localStorageStore('yaml', true);
+export const config: Writable<Config> = writable(localConfig);
+export const yamlOut: Writable<boolean> = writable(true);
