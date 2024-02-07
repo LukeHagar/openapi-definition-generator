@@ -39,11 +39,9 @@
 		"typescript": "^5.3.3",
 		"vite": "^5.0.0",
 		"vite-plugin-tailwind-purgecss": "^0.2.0",
-		"yaml": "^2.3.4"
-	},
-	"type": "module",
-	"dependencies": {
+		"yaml": "^2.3.4",
 		"@sentry/sveltekit": "^7.99.0",
 		"highlight.js": "^11.9.0"
-	}
+	},
+	"type": "module"
 }
