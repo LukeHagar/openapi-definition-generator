@@ -75,7 +75,7 @@
 <div class="flex flex-row p-1 gap-1">
 	<div class="grow max-w-[50%]">
 		<div class="card overflow-hidden">
-			<p class="text-center pt-2">Input you API call details here</p>
+			<p class="text-center pt-2">Input your API call details here</p>
 			<div class="flex flex-row gap-4 justify-center py-6">
 				<div class="flex flex-col gap-2 max-w-md text-sm">
 					<label class="label flex flex-col">
