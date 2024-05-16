@@ -142,7 +142,6 @@ export function convertArray(array: unknown[], config: Config) {
 	const output: ArrayType = { type: 'array' };
 	const outputItems: Output[] = [];
 	const items: unknown[] = [];
-	const exampleArray = [];
 	const schema = new Map<string, unknown>();
 	for (const entry of array) {
 		if (config.allowOneOf) {
@@ -160,7 +159,6 @@ export function convertArray(array: unknown[], config: Config) {
 				)
 			) {
 				outputItems.push(objectMap);
-				exampleArray.push(entry);
 			}
 		} else {
 			items.push(entry);
@@ -181,15 +179,11 @@ export function convertArray(array: unknown[], config: Config) {
 		}
 	} else {
 		if (schema.size > 0) {
-			exampleArray.push(Object.fromEntries(schema.entries()));
 			output.items = convertObject(schema, config);
 		} else {
-			exampleArray.push(items[0]);
 			output.items = convertObject(items[0], config);
 		}
 	}
-
-	if (config.includeExamples) output.example = exampleArray;
 
 	return output;
 }
