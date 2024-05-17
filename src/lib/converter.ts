@@ -57,38 +57,38 @@ export type Config = {
 export type StringType = {
 	type: 'string';
 	format?: string;
-	example?: string;
+	examples?: [string];
 };
 
 export type NumberType = {
 	type: 'number';
 	format?: string;
-	example?: number;
+	examples?: [number];
 };
 
 export type ObjectType = {
 	type: 'object';
 	properties: { [key: string]: Output };
 	additionalProperties?: boolean;
-	example?: object;
+	examples?: [object];
 };
 
 export type ArrayType = {
 	type: 'array';
 	items?: Output | { oneOf: Output[] };
-	example?: unknown[];
+	examples?: [unknown[]];
 };
 
 export type BooleanType = {
 	type: 'boolean';
 	format?: string;
-	example?: boolean;
+	examples?: [boolean];
 };
 
 export type IntegerType = {
 	type: 'integer';
 	format?: string;
-	example?: number;
+	examples?: [number];
 };
 
 export type NullableType = {
@@ -120,7 +120,7 @@ export function convertNumber(number: number, config: Config) {
 		output = { type: 'number' } as NumberType;
 	}
 	if (config.includeExamples) {
-		output.example = number;
+		output.examples = [number];
 	}
 
 	return output;
@@ -199,7 +199,7 @@ export function convertString(string: string, config: Config) {
 	} else if (regxDate.test(string)) {
 		output.format = 'date';
 	}
-	if (config.includeExamples) output.example = string;
+	if (config.includeExamples) output.examples = [string];
 
 	return output;
 }
@@ -224,7 +224,7 @@ export function convertObject(input: unknown, config: Config) {
 		return convertString(input, config);
 	} else if (typeof input === 'boolean') {
 		const output: BooleanType = { type: 'boolean' };
-		if (config.includeExamples) output.example = input;
+		if (config.includeExamples) output.examples = [input];
 		return output;
 	} else if (input === undefined) {
 		throw new Error(`undefined cannot be converted to OAS`);
