@@ -13,7 +13,6 @@
 	},
 	"devDependencies": {
 		"@floating-ui/dom": "^1.6.1",
-		"@sentry/sveltekit": "^7.100.1",
 		"@skeletonlabs/skeleton": "^2.8.0",
 		"@skeletonlabs/tw-plugin": "^0.3.1",
 		"@sveltejs/adapter-auto": "^3.1.1",
