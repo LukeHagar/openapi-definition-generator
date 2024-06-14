@@ -178,8 +178,9 @@ export function convertArray(array: unknown[], config: Config) {
 			output.items = outputItems[0];
 		}
 	} else {
+		console.log(schema, items);
 		if (schema.size > 0) {
-			output.items = convertObject(schema, config);
+			output.items = convertObject(Object.fromEntries(schema.entries()), config);
 		} else {
 			output.items = convertObject(items[0], config);
 		}
