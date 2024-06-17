@@ -1,3 +1,5 @@
+import type { OpenAPIV3_1 } from "openapi-types";
+
 export const example = {
 	numbersMock: {
 		smallInt: -20,
@@ -44,71 +46,15 @@ export type Config = {
 	includeExamples: boolean;
 
 	/**
-	 * @description The type to use for null values
-	 */
-	nullType: 'number' | 'string' | 'integer' | 'boolean';
-
-	/**
 	 * @description Whether to allow oneOf for array items schema
 	 */
 	allowOneOf: boolean;
 };
 
-export type StringType = {
-	type: 'string';
-	format?: string;
-	examples?: [string];
-};
-
-export type NumberType = {
-	type: 'number';
-	format?: string;
-	examples?: [number];
-};
-
-export type ObjectType = {
-	type: 'object';
-	properties: { [key: string]: Output };
-	additionalProperties?: boolean;
-	examples?: [object];
-};
-
-export type ArrayType = {
-	type: 'array';
-	items?: Output | { oneOf: Output[] };
-	examples?: [unknown[]];
-};
-
-export type BooleanType = {
-	type: 'boolean';
-	format?: string;
-	examples?: [boolean];
-};
-
-export type IntegerType = {
-	type: 'integer';
-	format?: string;
-	examples?: [number];
-};
-
-export type NullableType = {
-	type: string;
-	format: 'nullable';
-};
-
-export type Output =
-	| StringType
-	| NumberType
-	| ObjectType
-	| ArrayType
-	| BooleanType
-	| IntegerType
-	| NullableType;
-
-export function convertNumber(number: number, config: Config) {
-	let output: Output;
+export function convertNumber(number: number, config: Config): OpenAPIV3_1.SchemaObject {
+	let output: OpenAPIV3_1.SchemaObject;
 	if (Number.isInteger(number) && config.allowIntegers) {
-		output = { type: 'integer' } as IntegerType;
+		output = { type: 'integer' }
 		if (number < 2147483647 && number > -2147483647) {
 			output.format = 'int32';
 		} else if (Number.isSafeInteger(number)) {
@@ -117,7 +63,7 @@ export function convertNumber(number: number, config: Config) {
 			output.format = 'unsafe';
 		}
 	} else {
-		output = { type: 'number' } as NumberType;
+		output = { type: 'number' };
 	}
 	if (config.includeExamples) {
 		output.examples = [number];
@@ -126,39 +72,23 @@ export function convertNumber(number: number, config: Config) {
 	return output;
 }
 
-const isObject = (item: Output): item is ObjectType => {
-	return item.type === 'object';
-};
-
-const isArray = (item: Output): item is ArrayType => {
-	return item.type === 'array';
-};
-
-const isObjectOrArray = (item: Output): item is ObjectType | ArrayType => {
-	return isObject(item) || isArray(item);
-};
-
-export function convertArray(array: unknown[], config: Config) {
-	const output: ArrayType = { type: 'array' };
-	const outputItems: Output[] = [];
+export function convertArray(array: unknown[], config: Config): OpenAPIV3_1.ArraySchemaObject {
+	const output: OpenAPIV3_1.ArraySchemaObject = { type: 'array', items: {} };
+	const outputItems: OpenAPIV3_1.SchemaObject[] = [];
 	const items: unknown[] = [];
 	const schema = new Map<string, unknown>();
 	for (const entry of array) {
 		if (config.allowOneOf) {
 			const objectMap = convertObject(entry, config);
-			if (
-				!outputItems.some(
-					(item) =>
-						(item.type === objectMap.type &&
-							!isObjectOrArray(item) &&
-							!isObjectOrArray(objectMap) &&
-							item.format === objectMap.format) ||
-						(isObject(item) &&
-							isObject(objectMap) &&
-							Object.keys(item.properties).sort() === Object.keys(objectMap.properties).sort())
-				)
-			) {
-				outputItems.push(objectMap);
+			const isDuplicate = outputItems.some(item => {
+				const hasSameTypeAndFormat = item.type === objectMap.type && item.format === objectMap.format;
+				const hasSameProperties = item.properties && objectMap.properties &&
+					JSON.stringify(Object.keys(item.properties).sort()) === JSON.stringify(Object.keys(objectMap.properties).sort());
+				return hasSameTypeAndFormat || hasSameProperties;
+			});
+
+			if (!isDuplicate) {
+				outputItems.push(objectMap as OpenAPIV3_1.SchemaObject);
 			}
 		} else {
 			items.push(entry);
@@ -189,8 +119,8 @@ export function convertArray(array: unknown[], config: Config) {
 	return output;
 }
 
-export function convertString(string: string, config: Config) {
-	const output: StringType = { type: 'string' };
+export function convertString(string: string, config: Config): OpenAPIV3_1.SchemaObject {
+	const output: OpenAPIV3_1.SchemaObject = { type: 'string' };
 	const regxDate = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 	const regxDateTime =
 		/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]).([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,3})?(Z|(\+|-)([0-1][0-9]|2[0-3]):[0-5][0-9])$/;
@@ -205,16 +135,16 @@ export function convertString(string: string, config: Config) {
 	return output;
 }
 
-export function convertObject(input: unknown, config: Config) {
+export function convertObject(input: unknown, config: Config): OpenAPIV3_1.SchemaObject {
 	if (input === null) {
-		return { type: config.nullType, format: 'nullable' } as NullableType;
+		return { type: ['null'] };
 	} else if (typeof input === 'number') {
 		return convertNumber(input, config);
 	} else if (Array.isArray(input)) {
 		return convertArray(input, config);
 	} else if (typeof input === 'object') {
-		const output: ObjectType = { type: 'object', properties: {} };
-		const outputObj: Map<string, Output> = new Map();
+		const output: OpenAPIV3_1.SchemaObject = { type: 'object', properties: {} };
+		const outputObj: Map<string, OpenAPIV3_1.SchemaObject> = new Map();
 		for (const prop in input) {
 			// @ts-expect-error we are looping through self supplied object keys determined at runtime
 			outputObj.set(prop, convertObject(input[prop], config));
@@ -224,7 +154,7 @@ export function convertObject(input: unknown, config: Config) {
 	} else if (typeof input === 'string') {
 		return convertString(input, config);
 	} else if (typeof input === 'boolean') {
-		const output: BooleanType = { type: 'boolean' };
+		const output: OpenAPIV3_1.SchemaObject = { type: 'boolean' };
 		if (config.includeExamples) output.examples = [input];
 		return output;
 	} else if (input === undefined) {
@@ -234,12 +164,12 @@ export function convertObject(input: unknown, config: Config) {
 	}
 }
 
-export function convertJSONToOAS(input: string, config: Config) {
+export function convertJSONToOAS(input: string, config: Config): OpenAPIV3_1.SchemaObject {
 	const obj = JSON.parse(input);
 	return convertObject(obj, config);
 }
 
-export function convertObjectToOAS(input: object, config: Config) {
+export function convertObjectToOAS(input: object, config: Config): OpenAPIV3_1.SchemaObject {
 	return convertObject(input, config);
 }
 
