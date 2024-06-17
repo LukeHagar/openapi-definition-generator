@@ -110,6 +110,7 @@
 					<label class="label flex flex-col">
 						<span>Status Code</span>
 						<select class="select" bind:value={status}>
+							<option value="default">Default - A catch-all identifier for any other status codes not defined in the map</option>
 							{#each status_codes.sort(sortByCode) as code}
 								<option value={code.code}>
 									{code.code} - {code.description
@@ -129,17 +130,6 @@
 						name="tags"
 						placeholder="Enter the operations tags..."
 					/>
-					<div class="flex flex-col justify-center">
-						<label class="label flex flex-col">
-							<span>Convert null values to</span>
-							<select bind:value={$config.nullType} class="select p-1" id="nullType">
-								<option value="string" selected>String</option>
-								<option value="number">Number</option>
-								<option value="integer">Integer</option>
-								<option value="boolean">Boolean</option>
-							</select>
-						</label>
-					</div>
 
 					<div class="flex flex-col justify-center">
 						<label for="output-format" class="label flex flex-col">
