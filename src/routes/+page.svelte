@@ -30,7 +30,7 @@
 		if (yamlOut) {
 			return stringify(value, { aliasDuplicateObjects: false });
 		} else {
-			return JSON.stringify(value, null, 4);
+			return JSON.stringify(value, null, 2);
 		}
 	}
 
