@@ -66,7 +66,7 @@ export function convertNumber(number: number, config: Config): OpenAPIV3_1.Schem
 		output = { type: 'number' };
 	}
 	if (config.includeExamples) {
-		output.examples = [number];
+		output.examples = [{value: number}];
 	}
 
 	return output;
@@ -130,7 +130,7 @@ export function convertString(string: string, config: Config): OpenAPIV3_1.Schem
 	} else if (regxDate.test(string)) {
 		output.format = 'date';
 	}
-	if (config.includeExamples) output.examples = [string];
+	if (config.includeExamples) output.examples = [{value:string}];
 
 	return output;
 }
@@ -155,7 +155,7 @@ export function convertObject(input: unknown, config: Config): OpenAPIV3_1.Schem
 		return convertString(input, config);
 	} else if (typeof input === 'boolean') {
 		const output: OpenAPIV3_1.SchemaObject = { type: 'boolean' };
-		if (config.includeExamples) output.examples = [input];
+		if (config.includeExamples) output.examples = [{value: input}];
 		return output;
 	} else if (input === undefined) {
 		throw new Error(`undefined cannot be converted to OAS`);
