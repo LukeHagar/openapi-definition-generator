@@ -110,7 +110,9 @@
 					<label class="label flex flex-col">
 						<span>Status Code</span>
 						<select class="select" bind:value={status}>
-							<option value="default">Default - A catch-all identifier for any other status codes not defined in the map</option>
+							<option value="default">
+								Default - A catch-all identifier for any other status codes not defined in the map
+							</option>
 							{#each status_codes.sort(sortByCode) as code}
 								<option value={code.code}>
 									{code.code} - {code.description
