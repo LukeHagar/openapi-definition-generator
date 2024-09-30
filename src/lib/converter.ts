@@ -1,37 +1,41 @@
 import type { OpenAPIV3_1 } from "openapi-types";
 
 export const example = {
-	numbersMock: {
-		smallInt: -20,
-		bigInt: 2147483647,
+	"numbersMock": {
+		"smallInt": -20,
+		"bigInt": 2147483647,
 		// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
-		unsafeInt: 9999999999999999,
-		notInt: 12.2
+		"unsafeInt": 9999999999999999,
+		"notInt": 12.2
 	},
-	stringsMock: {
-		stringTest: 'Hello World',
-		isoDate: '1999-12-31',
-		isoDateTime: '1999-12-31T23:59:59Z'
+	"stringsMock": {
+		"stringTest": "Hello World",
+		"isoDate": "1999-12-31",
+		"isoDateTime": "1999-12-31T23:59:59Z"
 	},
-	objectsMock: {
-		child: { child: true },
-		childList: [{ child: true }],
-		childMatrix: [[{ child: true }]],
-		mixedObjectsArray: [
-			[1, 2, { test: true }],
-			{ child: true },
-			{ son: true },
-			{ son: true },
-			{ offspring: true }
+	"objectsMock": {
+		"child": { "child": true },
+		"childList": [{ "child": true }],
+		"childMatrix": [[{ "child": true }]],
+		"mixedObjectsArray": [
+			[1, 2, { "test": true }],
+			{ "child": true },
+			{ "son": true },
+			{ "son": true },
+			{ "offspring": true }
 		],
-		nullable: null
+		"nullable": null
 	},
-	listMock: [1, 2, 3, 4, 5],
-	matrixMock: [
+	"listMock": [1, 2, 3, 4, 5],
+	"matrixMock": [
 		[1, 2],
 		[3, 4]
 	],
-	mixedArrayMock: [1, 'two', 3, 'four']
+	"mixedArrayMock": [1, "two", 3, "four", 5],
+	"mixedMatrixMock": [
+		[1, "two"],
+		[3, "four"]
+	]
 };
 
 export type Config = {
